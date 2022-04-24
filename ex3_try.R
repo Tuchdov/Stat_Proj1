@@ -11,6 +11,28 @@ time_pet = function(rate) {
   # return only values less then 720
   return(vec[-i])
 }
+tipul_duration <- function(pet_vec, index){
+  name = names(pet_vec)[index]
+  if ( name == "dog"){
+    serv_time = rexp(1, rate = 3)
+  }
+  else{
+    serv_time = rexp(1, rate = 5)
+  }
+  return(serv_time)
+}
+
+tipul_duration_pet <- function(name){
+  if ( name == "dog"){
+    serv_time = rexp(1, rate = 3)
+  }
+  else{
+    serv_time = rexp(1, rate = 5)
+  }
+  return(serv_time)
+}
+
+# function starts here
 
 time_dog = time_pet(3)
 time_cat <- time_pet(1.5)
@@ -28,23 +50,15 @@ n = length(time_costumer)
 names(time_costumer)[1] == "dog"
 names(time_costumer) == "dog"
 
-tipul_duration <- function(pet_vec, index){
-  name = names(pet_vec)[index]
-  if ( name == "dog"){
-    serv_time = rexp(1, rate = 3)
-  }
-  else{
-    serv_time = rexp(1, rate = 5)
-  }
-  return(serv_time)
-}
 
 
-interval <-  function(arrival, tipul){
+
+interval <-  function(arrival){
   int = numeric(n)
   int[1] = 0
   int[2] = time_costumer[1]
-  tor = 0 
+  tor = numeric(n)
+  tor[1] = 0
   i = 3
   
   sof_tipul = numeric(n)
@@ -52,10 +66,15 @@ interval <-  function(arrival, tipul){
   
   tipul_num = 1
   arrival_num = 1
+  tor_indx = 1
   # first_costumer_in_line = cat or dog names of next arrival when tor == 0' 
   # only saved when arrival_time > sof_tipul
   while(int[i] < 720){
-    if (tor == 0){
+    
+    # case when tor = 0
+    if (tor[tor_indx] == 0){
+      # reset the 1st in tor
+      rishon_intor = c()
       if (sof_tipul[tipul_num] < arrival[arrival_num]){
         # the tor didn't change start next tipul
         tipul_num = tipul_num + 1
@@ -63,35 +82,100 @@ interval <-  function(arrival, tipul){
         sof_tipul[tipul_num] = arrival[arrival_num] + tipul_duration(arrival, index = arrival_num) 
       }
       else{
-        tor = tor + 1
+        tor_indx = tor_indx + 1
+        tor[tor_indx] = tor[tor_indx - 1] + 1
         int[i] = arrival[arrival_num]
+        # heres the change, defining who is the 1st customer cat or dog
+        rishon_intor = names(arrival[arrival_num])
         i = i + 1
         arrival_num = arrival_num + 1
-        # heres the change, defining who is the 1st customer cat or dog
       }
     }
+    
     # case when line num betwwen 1-9
-    else if (tor > 0 && tor < 10){
+    else if (tor[tor_indx] > 0 && tor[tor_indx] < 10){
       if (sof_tipul[tipul_num] < arrival[arrival_num]){
         # the tor yored 1 ,start next tipul
+        tor_indx = tor_indx + 1
+        tor[tor_indx] = tor[tor_indx - 1] - 1
         tipul_num = tipul_num + 1
-        if(tor == 1 && fst_costumer )
-        tor = tor - 1
         int[i] = sof_tipul[tipul_num]
+        # מה הזמן של הטיפול הבא?
+       # next tipul is imiddently after and the time it takes to service the rishon intor
+        sof_tipul[tipul_num] = sof_tipul[tipul_num - 1] + tipul_duration_pet(rishon_intor)
+        rishon_intor = "dog"
         i = i +1
       }
-      else if (sof_tipul[tipul_num] > arrival[arrival_num]){
+      # to delete brackets
+      else(sof_tipul[tipul_num] > arrival[arrival_num]){
         if (names(arrival[arrival_num]) == "dog"){
-        tor = tor + 1
+        tor_indx = tor_indx + 1
+        tor[tor_indx] = tor[tor_indx - 1] + 1
         arrival_num = arrival_num + 1
         int[i] = arrival[arrival_num]
         i = i +1 
         }
+        # a cat has arrived' only update to the next costumer
+        else{
+          arrival_num = arrival_num + 1
+        }
       }
       
     }
+    
+    #case when tor = 10 (is full)
+    else{
+      if (sof_tipul[tipul_num] < arrival[arrival_num]){
+      tor = tor - 1 
+      int[i] = sof_tipul[tipul_num]
+      tipul_num = tipul_num + 1
+      # מה הזמן של הטיפול הבא?
+      # next tipul is imiddently after and the time it takes to service the rishon intor
+      sof_tipul[tipul_num] = sof_tipul[tipul_num - 1] + tipul_duration_pet(rishon_intor)
+      rishon_intor = "dog"
+      i = i +1
+      }
+      # a customer arrived and tor is full
+      else{
+        if(names(arrival[arrival_num]) == "dog"){
+          # revenue = revenue - 0.01
+          arrival_num = arrival_num + 1
+        }
+        else{
+          arrival_num = arrival_num + 1
+        }
+        
+      }
+    }
   }
+  # return the avg tor 
+  # calculating the avg tor, for this wind tor in int[i] and time of int[i]
+  
+  return
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # building intervals 1
 # intervals are just changes in line/service
@@ -214,6 +298,7 @@ serv_pet <-  function(x){
     
   }
 }
+
 
 
 אם אין תור ועוד לא הגיע לקוח
