@@ -199,8 +199,9 @@ interval <-  function(){
   profit = sum(payment) - 0.1*dog_reject_count
   dog_num = sum(payment == 1)
   cat_num = sum(payment == 3)
+  cat_rejected = length(time_cat) - cat_num
   answer_list = list("profit" = profit, "dog_num" = dog_num,"dog_reject_count" = dog_reject_count,"cat_num" =  cat_num,
-                    "est_avg_tor" = avg_estimate )
+                    "est_avg_tor" = avg_estimate, "cat_rejected" = cat_rejected )
 
   #return(c(length(tor[1:(tor_indx+1)]), length(time_int),tor_indx))
   return(answer_list)
@@ -216,13 +217,14 @@ sim_3a_avg = mean(replicate(100,interval()$est_avg_tor))
 sim_3a_dog_num = mean(replicate(100,interval()$dog_num))
 sim_3a_cat_num = mean(replicate(100,interval()$cat_num))
 sim_3a_reject_count = mean(replicate(100,interval()$dog_reject_count))
+sim_3a_reject_cat = mean(replicate(100,interval()$cat_rejected))
 
 paste("The expected value of profit:" , round(sim_3a_profit,3)) 
 paste("The expected value of avg tor:" , round(sim_3a_avg,3)) 
 paste("The expected value of dogs served:" , round(sim_3a_dog_num ,3)) 
 paste("The expected value of cats served:" , round(sim_3a_cat_num,3)) 
-paste("The expected value of cat's rejected:" , round(sim_3a_reject_count,3)) 
-
+paste("The expected value of dog's rejected:" , round(sim_3a_reject_count,3)) 
+paste("The expected value of cats's rejected:" , round(sim_3a_reject_cat,3)) 
 
 interval_2a <-  function(){
   
@@ -365,8 +367,9 @@ interval_2a <-  function(){
   profit = sum(payment) - 0.1*dog_reject_count
   dog_num = sum(payment == 1)
   cat_num = sum(payment == 3)
+  cat_rejected = length(time_cat) - cat_num
   answer_list = list("profit" = profit, "dog_num" = dog_num,"dog_reject_count" = dog_reject_count,"cat_num" =  cat_num,
-                     "est_avg_tor" = avg_estimate )
+                     "est_avg_tor" = avg_estimate, "cat_rejected" = cat_rejected )
   
   #return(c(length(tor[1:(tor_indx+1)]), length(time_int),tor_indx))
   return(answer_list)
@@ -381,12 +384,14 @@ sim_32a_avg = mean(replicate(100,interval_2a()$est_avg_tor))
 sim_32a_dog_num = mean(replicate(100,interval_2a()$dog_num))
 sim_32a_cat_num = mean(replicate(100,interval_2a()$cat_num))
 sim_32a_reject_count = mean(replicate(100,interval_2a()$dog_reject_count))
+sim_32b_reject_cat = mean(replicate(100,interval_2a()$cat_rejected))
 
 paste("The expected value of profit:" , round(sim_32a_profit,3)) 
 paste("The expected value of avg tor:" , round(sim_32a_avg,3)) 
 paste("The expected value of dogs served:" , round(sim_32a_dog_num ,3)) 
 paste("The expected value of cats served:" , round(sim_32a_cat_num,3)) 
-paste("The expected value of cat's rejected:" , round(sim_32a_reject_count,3))
+paste("The expected value of dogs's rejected:" , round(sim_32a_reject_count,3))
+paste("The expected value of cat's rejected:" , round(sim_32b_reject_cat,3))
 
 interval_2b = function(){
   tipul_duration2 <- function(pet_vec, index){
@@ -550,8 +555,10 @@ interval_2b = function(){
   profit = sum(payment) - 0.1*dog_reject_count
   dog_num = sum(payment == 1)
   cat_num = sum(payment == 3)
+  cat_rejected = length(time_cat) - cat_num
   answer_list = list("profit" = profit, "dog_num" = dog_num,"dog_reject_count" = dog_reject_count,"cat_num" =  cat_num,
-                     "est_avg_tor" = avg_estimate )
+                     "est_avg_tor" = avg_estimate, "cat_rejected" = cat_rejected )
+  
   
   #return(c(length(tor[1:(tor_indx+1)]), length(time_int),tor_indx))
   return(answer_list)
@@ -571,9 +578,11 @@ sim_32b_avg = mean(replicate(100,interval_2b()$est_avg_tor))
 sim_32b_dog_num = mean(replicate(100,interval_2b()$dog_num))
 sim_32b_cat_num = mean(replicate(100,interval_2b()$cat_num))
 sim_32b_reject_count = mean(replicate(100,interval_2b()$dog_reject_count))
+sim_32b_reject_cat = mean(replicate(100,interval_2b()$cat_rejected))
 
 paste("The expected value of profit:" , round(sim_32b_profit,3)) 
 paste("The expected value of avg tor:" , round(sim_32b_avg,3)) 
 paste("The expected value of dogs served:" , round(sim_32b_dog_num ,3)) 
 paste("The expected value of cats served:" , round(sim_32b_cat_num,3)) 
-paste("The expected value of cat's rejected:" , round(sim_32b_reject_count,3))
+paste("The expected value of dog's rejected:" , round(sim_32b_reject_count,3))
+paste("The expected value of cat's rejected:" , round(sim_32b_reject_cat,3))
