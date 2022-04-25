@@ -134,8 +134,8 @@ interval <-  function(){
         tor_indx = tor_indx + 1
         payment[tipul_num] = tipul_peyment_pet(rishon_intor)
         tor[tor_indx] = tor[tor_indx - 1] - 1
-        tipul_num = tipul_num + 1
         int[i] = sof_tipul[tipul_num]
+        tipul_num = tipul_num + 1
         # מה הזמן של הטיפול הבא?
        # next tipul is imiddently after and the time it takes to service the rishon intor
         sof_tipul[tipul_num] = sof_tipul[tipul_num - 1] + tipul_duration_pet(rishon_intor)
@@ -210,7 +210,7 @@ interval <-  function(){
 
 
 interval()
-ans = interval(arrival = time_costumer)
+
 
 sim_3a_profit = mean(replicate(100,interval()$profit))
 sim_3a_avg = mean(replicate(100,interval()$est_avg_tor))
